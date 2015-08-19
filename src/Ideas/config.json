@@ -1,0 +1,10 @@
+{
+  "AppSettings": {
+    "SiteTitle": "Ideas"
+  },
+  "Data": {
+    "DefaultConnection": {
+      "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=aspnet5-Ideas-40a92a22-3b77-4ed6-8056-dd77fd246966;Trusted_Connection=True;MultipleActiveResultSets=true"
+    }
+  }
+}

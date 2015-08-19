@@ -1,0 +1,55 @@
+﻿<link rel="import" href="../lib/polymer/polymer.html">
+<link rel="import" href="../lib/iron-ajax/iron-ajax.html">
+<dom-module id="milk-griddit">
+    <template>
+        <iron-ajax auto id="ironAjaxReddit" url="{{getAjaxUrl(redditUrl,subreddit,itemcount)}}" handle-as="json" on-response="hresponse"></iron-ajax>
+        <div>
+            <template is="dom-repeat" items="{{gridData}}">
+                <div class="griddit-item">
+                    <a href="{{computeFullLink(item.data.permalink)}}">{{item.data.title}}: <img src="{{computeImageSrc(item.data.url)}}" /></a>
+                </div>
+            </template>
+            <div class="clearfix"></div>
+        </div>
+    </template>
+</dom-module>
+<style>
+    .griddit-item {
+        float: left;
+        width: 240px;
+        height: 240px;
+    }
+    .griddit-item img {
+        width: 100%;
+    }
+</style>
+<script>
+    griddit = Polymer({
+        is: 'milk-griddit',
+        properties: {
+            redditUrl: {
+                type: String,
+                value: "http://www.reddit.com"
+            },
+            itemcount:  String,
+            subreddit:  String
+        },
+        getAjaxUrl: function (redditUrl, subreddit, itemcount) {
+            return redditUrl + "/r/" + subreddit + ".json?limit=" + parseInt(itemcount) * 2;
+        },
+        computeFullLink: function (permalink) {
+            return this.redditUrl + permalink;
+        },
+        computeImageSrc: function (url) {
+            var outUrl = url;
+            if (url.indexOf('.') < (url.length-5))
+                outUrl += '.png';
+            return outUrl.replace('.gifv', '.gif').replace('.webm', '.gif');
+        },
+        hresponse: function (data) {
+            this.gridData = data.detail.response.data.children.filter(function (item) {
+                return item.data.domain.indexOf('imgur') > -1 && item.data.url.indexOf('/a/') < 0 && item.data.url.indexOf('/gallery/') < 0;
+            }).splice(0, parseInt(this.itemcount));
+        }
+    });
+</script>

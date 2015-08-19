@@ -1,0 +1,19 @@
+{
+  "name": "ASP.NET",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "3.0.0",
+    "bootstrap-touch-carousel": "0.8.0",
+    "hammer.js": "2.0.4",
+    "jquery": "2.1.4",
+    "jquery-validation": "1.11.1",
+    "jquery-validation-unobtrusive": "3.2.2",
+    "polymer": "1.0.0",
+    "iron-ajax": "PolymerElements/iron-ajax#^1.0.0",
+    "paper-button": "PolymerElements/paper-button#^1.0.0"
+  },
+  "resolutions": {
+    "polymer": "1.0.0",
+    "webcomponentsjs": "0.7.11"
+  }
+}
