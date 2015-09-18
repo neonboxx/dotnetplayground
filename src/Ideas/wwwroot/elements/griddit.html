@@ -1,26 +1,76 @@
 ﻿<link rel="import" href="../lib/polymer/polymer.html">
 <link rel="import" href="../lib/iron-ajax/iron-ajax.html">
-<dom-module id="milk-griddit">
+<link rel="import" href="../lib/paper-input/paper-input.html" />
+<link rel="import" href="../lib/paper-button/paper-button.html" />
+<link rel="import" href="../lib/paper-fab/paper-fab.html" />
+<link rel="import" href="../lib/iron-icons/iron-icons.html" />
+<link rel="import" href="../lib/paper-icon-button/paper-icon-button.html" />
+<link rel="import" href="../lib/paper-card/paper-card.html" />
+<link rel="import" href="../lib/iron-flex-layout/iron-flex-layout.html">
+
+<dom-module id="milk-griddit" class="fullbleed layout horizontal">
+
     <template>
-        <iron-ajax auto id="ironAjaxReddit" url="{{getAjaxUrl(redditUrl,subreddit,itemcount)}}" handle-as="json" on-response="hresponse"></iron-ajax>
-        <div>
-            <template is="dom-repeat" items="{{gridData}}">
-                <div class="griddit-item">
-                    <a href="{{computeFullLink(item.data.permalink)}}">{{item.data.title}}: <img src="{{computeImageSrc(item.data.url)}}" /></a>
+        <paper-material elevation="1">
+            <iron-ajax id="ironAjaxReddit" url="{{getAjaxUrl(redditUrl,subreddit,itemcount)}}" handle-as="json" on-response="hresponse"></iron-ajax>
+            <div>
+
+                <div id="cards">
+                    <paper-input label="SubReddit" value="{{subreddit::input}}">
+                        <paper-icon-button suffix icon="refresh" on-click="btnUpdateClick"></paper-icon-button>
+                    </paper-input>
+                    <template is="dom-repeat" items="{{gridData}}">
+                        <paper-card class="pink" image="{{computeImageSrc(item.data.url)}}">
+                            <div class="title">
+                                <div class="medium">{{item.data.title}}</div>
+                            </div>
+                        </paper-card>
+                    </template>
                 </div>
-            </template>
-            <div class="clearfix"></div>
-        </div>
+
+                <div class="clearfix"></div>
+            </div>
+        </paper-material>
     </template>
 </dom-module>
 <style>
-    .griddit-item {
-        float: left;
-        width: 240px;
-        height: 240px;
-    }
-    .griddit-item img {
+    paper-card {
         width: 100%;
+        margin-bottom: 16px;
+    }
+
+    #cards {
+        @apply(--layout-vertical);
+        @apply(--center-justified);
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+     .fancy .title {
+      position: absolute;
+      top: 30px;
+      left: 100px;
+      color: var(--paper-indigo-500);
+    }
+
+    .fancy img {
+      width: 100%;
+    }
+
+    .fancy .big {
+      font-size: 22px;
+      padding: 8px 0 16px;
+      color: var(--google-grey-500);
+    }
+
+    .fancy .medium {
+      font-size: 16px;
+      padding-bottom: 8px;
+    }
+
+    .pink {
+        --paper-card-header-color: var(--paper-pink-500);
     }
 </style>
 <script>
@@ -31,8 +81,15 @@
                 type: String,
                 value: "http://www.reddit.com"
             },
-            itemcount:  String,
-            subreddit:  String
+            itemcount: String,
+            subreddit: {
+                type: String,
+                value: "pics"
+            }
+        },
+        btnUpdateClick: function (event, detail, sender) {
+            this.$.ironAjaxReddit.generateRequest()
+
         },
         getAjaxUrl: function (redditUrl, subreddit, itemcount) {
             return redditUrl + "/r/" + subreddit + ".json?limit=" + parseInt(itemcount) * 2;
@@ -42,7 +99,7 @@
         },
         computeImageSrc: function (url) {
             var outUrl = url;
-            if (url.indexOf('.') < (url.length-5))
+            if (url.indexOf('.') < (url.length - 5))
                 outUrl += '.png';
             return outUrl.replace('.gifv', '.gif').replace('.webm', '.gif');
         },

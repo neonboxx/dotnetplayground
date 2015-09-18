@@ -1,0 +1,61 @@
+﻿<link rel="import" href="../lib/polymer/polymer.html">
+<link rel="import" href="../lib/iron-ajax/iron-ajax.html">
+<link rel="import" href="../lib/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../lib/paper-card/paper-card.html" />
+<link rel="import" href="../lib/paper-button/paper-button.html" />
+<link rel="import" href="../lib/paper-toolbar/paper-toolbar.html" />
+<link rel="import" href="../lib/paper-item/paper-item.html" />
+
+
+<dom-module id="milk-ticker" class="fullbleed layout horizontal">
+    <template>
+        <iron-ajax id="ironAjaxReddit" url="{{tickerJsonUrl}}" handle-as="json" on-response="hresponse" auto></iron-ajax>
+        <paper-toolbar >
+            <template is="dom-repeat" items="{{tickerData}}">
+                <paper-item>{{item.data.title}}</paper-item>
+            </template>
+</paper-toolbar>
+    </template>
+</dom-module>
+<style>
+    paper-toolbar {
+        overflow:hidden;
+    }
+    paper-item{
+        min-width:200px;
+        height: 100%;
+        width: 300%;
+        -webkit-animation: slideshow 10s linear infinite;
+        -moz-animation:    slideshow 10s linear infinite;
+}
+@-webkit-keyframes slideshow {
+  0%    { left: 0; }
+  100%  { left: -200%; }
+}
+@moz-keyframes slideshow {
+  0%    { left: 0; }
+  100%  { left: -200%; }
+}
+</style>
+<script>
+    ticker = Polymer({
+        is: 'milk-ticker',
+        properties: {
+            tickerJsonUrl: {
+                type: String,
+                value: "http://www.reddit.com/r/gaming.json?limit=25"
+            },
+            itemcount: String,
+            subreddit: {
+                type: String,
+                value: "pics"
+            }
+        },
+        update: {
+
+        },
+        hresponse: function (data) {
+            this.tickerData = data.detail.response.data.children;
+        }
+    });
+</script>
